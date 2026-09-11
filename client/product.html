@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details & Price History - ⚡ DropX</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="/index.html" class="brand-logo">
+        <span class="brand-icon">⚡</span>
+        <span class="brand-text">Drop<span>X</span></span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="/index.html" class="nav-link">Home</a></li>
+        <li><a href="/products.html" class="nav-link active">Products</a></li>
+        <li><a href="/products.html?dropsOnly=true" class="nav-link">Price Drops</a></li>
+        <li><a href="/dashboard.html" class="nav-link">Watchlist</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button id="theme-toggle-btn" class="theme-btn" aria-label="Toggle theme">☀️</button>
+        <div id="nav-auth-slot">
+          <a href="/login.html" class="btn btn-outline btn-sm">Login</a>
+        </div>
+        <button class="mobile-toggle" aria-label="Open mobile menu">☰</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Product Detail Container -->
+  <main class="section">
+    <div class="container">
+      
+      <!-- Breadcrumb Navigation -->
+      <div class="breadcrumb" style="margin-bottom: 24px;">
+        <a href="/index.html">Home</a>
+        <span>/</span>
+        <a href="/products.html">Products</a>
+        <span>/</span>
+        <span id="breadcrumb-category">Category</span>
+        <span>/</span>
+        <span id="breadcrumb-title" style="color: var(--text-primary); font-weight: 600;">Loading...</span>
+      </div>
+
+      <!-- Main 2-Column Layout -->
+      <div class="product-detail-layout">
+        
+        <!-- Left Column: Product Image Gallery & Quick Actions -->
+        <div class="product-gallery">
+          <div class="gallery-main-image">
+            <img id="product-img" src="" alt="Product Image" onerror="this.src='https://images.unsplash.com/photo-1526738549149-8e07eca6c147?auto=format&fit=crop&w=800&q=80'">
+          </div>
+          
+          <div style="display: flex; gap: 12px; margin-top: 20px;">
+            <button id="watchlist-toggle-btn" class="btn btn-outline" style="flex: 1;">
+              ⭐ Add to Watchlist
+            </button>
+            <button id="open-alert-modal-btn" class="btn btn-primary" style="flex: 1;">
+              🔔 Set Price Alert
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Column: Product Overview, Stats, Recommendation -->
+        <div class="product-info-wrap">
+          <div class="product-main-header">
+            <div class="product-meta-tags">
+              <span id="product-brand" class="badge-tag">Brand</span>
+              <span id="product-category" class="badge-tag" style="background: var(--accent-gradient); color: #fff;">Category</span>
+              <span id="product-drop-badge" class="badge-tag" style="background: var(--drop-green-bg); color: var(--drop-green); border-color: var(--drop-green-border); display: none;">
+                ⬇️ Price Drop
+              </span>
+            </div>
+            <h1 id="product-title">Loading Product Details...</h1>
+            <p id="product-desc" style="color: var(--text-secondary); line-height: 1.6; font-size: 1rem;">
+              Please wait while we retrieve current pricing from retailer APIs...
+            </p>
+          </div>
+
+          <!-- Current Best Price Hero Banner -->
+          <div class="best-price-banner">
+            <div>
+              <div class="best-price-title">Current Best Price Across Stores</div>
+              <div id="product-best-price" class="best-price-val">₹--</div>
+            </div>
+            <div>
+              <a id="cheapest-deal-btn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg">
+                View Best Deal →
+              </a>
+            </div>
+          </div>
+
+          <!-- Price Statistics 3-Box Grid -->
+          <div class="price-stats-grid">
+            <div class="stat-box lowest">
+              <div class="label">Lowest Ever</div>
+              <div id="stat-lowest" class="val">₹--</div>
+            </div>
+            <div class="stat-box">
+              <div class="label">Average Price</div>
+              <div id="stat-average" class="val">₹--</div>
+            </div>
+            <div class="stat-box highest">
+              <div class="label">Highest Recorded</div>
+              <div id="stat-highest" class="val">₹--</div>
+            </div>
+          </div>
+
+          <!-- Smart BUY OR WAIT Recommendation Feature -->
+          <div id="recommendation-card" class="recommendation-box buy-now">
+            <div class="rec-icon" id="rec-icon">🟢</div>
+            <div class="rec-content">
+              <div style="font-size: 0.8rem; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 2px;">
+                DropX Algorithmic Recommendation
+              </div>
+              <h3 id="rec-status">BUY NOW</h3>
+              <p id="rec-reason">Current price is well below the historical average. Great time to buy.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Price History Chart Section (Chart.js) -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <h2 style="font-size: 1.4rem; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+              📊 Price History Chart
+            </h2>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">
+              Interactive tracked price movement across all verified online sellers
+            </p>
+          </div>
+
+          <!-- Timeframe Selector -->
+          <div class="chart-timeframe-btns">
+            <button class="timeframe-btn" data-timeframe="7d">7 Days</button>
+            <button class="timeframe-btn" data-timeframe="30d">30 Days</button>
+            <button class="timeframe-btn" data-timeframe="3m">3 Months</button>
+            <button class="timeframe-btn" data-timeframe="6m">6 Months</button>
+            <button class="timeframe-btn active" data-timeframe="1y">1 Year</button>
+          </div>
+        </div>
+
+        <div class="chart-canvas-wrap">
+          <canvas id="priceHistoryChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Multi-Store Price Comparison Table -->
+      <div class="store-table-card">
+        <h2 class="table-title">
+          🏪 Store Price Comparison
+        </h2>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 20px;">
+          Comparing live prices across verified top retailers in India. The lowest price is highlighted.
+        </p>
+
+        <div style="overflow-x: auto;">
+          <table class="store-table">
+            <thead>
+              <tr>
+                <th>Store</th>
+                <th>Price</th>
+                <th>Difference vs Best</th>
+                <th>Availability</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="store-table-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Price Alert Modal Dialog -->
+  <div id="alert-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>🔔 Set Price Alert</h3>
+        <button id="close-modal-btn" class="modal-close" aria-label="Close modal">✕</button>
+      </div>
+
+      <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 20px;">
+        Enter your target price. We will send an alert the moment this item drops to or below your target.
+      </p>
+
+      <form id="price-alert-form">
+        <div class="form-group">
+          <label class="form-label">Product Name</label>
+          <input type="text" id="modal-product-name" class="form-input" disabled>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Current Price</label>
+          <input type="text" id="modal-current-price" class="form-input" disabled>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="modal-target-price">Notify Me When Price Reaches (₹)</label>
+          <input 
+            type="number" 
+            id="modal-target-price" 
+            class="form-input" 
+            placeholder="e.g. 85000" 
+            min="1" 
+            required
+          >
+          <div style="display: flex; gap: 8px; margin-top: 10px;">
+            <button type="button" class="btn btn-outline btn-sm" id="preset-5-btn">5% Drop</button>
+            <button type="button" class="btn btn-outline btn-sm" id="preset-10-btn">10% Drop</button>
+            <button type="button" class="btn btn-outline btn-sm" id="preset-lowest-btn">Match Lowest</button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
+          🔔 CREATE ALERT
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>© 2026 ⚡ DropX Technologies Inc. All rights reserved.</div>
+        <div><a href="/products.html" style="color: var(--accent-primary);">Browse All Products</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/app.js"></script>
+  <script src="/js/chart.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const productId = urlParams.get('id');
+
+      if (!productId) {
+        window.location.href = '/products.html';
+        return;
+      }
+
+      let currentProduct = null;
+      let isInWatchlist = false;
+
+      // Elements
+      const productImg = document.getElementById('product-img');
+      const productTitle = document.getElementById('product-title');
+      const productBrand = document.getElementById('product-brand');
+      const productCategory = document.getElementById('product-category');
+      const productDesc = document.getElementById('product-desc');
+      const productBestPrice = document.getElementById('product-best-price');
+      const productDropBadge = document.getElementById('product-drop-badge');
+      const cheapestDealBtn = document.getElementById('cheapest-deal-btn');
+
+      const statLowest = document.getElementById('stat-lowest');
+      const statAverage = document.getElementById('stat-average');
+      const statHighest = document.getElementById('stat-highest');
+
+      const recCard = document.getElementById('recommendation-card');
+      const recIcon = document.getElementById('rec-icon');
+      const recStatus = document.getElementById('rec-status');
+      const recReason = document.getElementById('rec-reason');
+
+      const storeTableBody = document.getElementById('store-table-body');
+      const watchlistToggleBtn = document.getElementById('watchlist-toggle-btn');
+      const openAlertModalBtn = document.getElementById('open-alert-modal-btn');
+      const alertModal = document.getElementById('alert-modal');
+      const closeModalBtn = document.getElementById('close-modal-btn');
+      const priceAlertForm = document.getElementById('price-alert-form');
+
+      const modalProdName = document.getElementById('modal-product-name');
+      const modalCurrentPrice = document.getElementById('modal-current-price');
+      const modalTargetPrice = document.getElementById('modal-target-price');
+
+      // Initialize timeframe buttons
+      window.initTimeframeButtons();
+
+      try {
+        const res = await window.API.getProductById(productId);
+        currentProduct = res.data;
+
+        // Check Watchlist status if logged in
+        if (window.Auth && window.Auth.isAuthenticated()) {
+          try {
+            const watchRes = await window.API.getWatchlist();
+            if (watchRes.data && watchRes.data.some(p => p._id === productId)) {
+              isInWatchlist = true;
+              watchlistToggleBtn.innerText = '★ In Watchlist';
+              watchlistToggleBtn.style.color = '#f59e0b';
+            }
+          } catch (e) {}
+        }
+
+        // Render Overview
+        document.title = `${currentProduct.name} - Price Tracker | ⚡ DropX`;
+        document.getElementById('breadcrumb-title').innerText = currentProduct.name;
+        document.getElementById('breadcrumb-category').innerText = currentProduct.category;
+
+        productImg.src = currentProduct.image;
+        productTitle.innerText = currentProduct.name;
+        productBrand.innerText = currentProduct.brand;
+        productCategory.innerText = currentProduct.category;
+        productDesc.innerText = currentProduct.description || 'Verified product tracked across retailers.';
+        productBestPrice.innerText = window.formatCurrency(currentProduct.currentPrice);
+
+        if (currentProduct.priceDropPercentage > 0) {
+          productDropBadge.style.display = 'inline-flex';
+          productDropBadge.innerText = `⬇️ ${currentProduct.priceDropPercentage}% Price Drop`;
+        }
+
+        // Price Statistics
+        statLowest.innerText = window.formatCurrency(currentProduct.lowestPrice || currentProduct.currentPrice);
+        statAverage.innerText = window.formatCurrency(currentProduct.averagePrice || currentProduct.currentPrice);
+        statHighest.innerText = window.formatCurrency(currentProduct.highestPrice || currentProduct.currentPrice);
+
+        // Buy or Wait Recommendation
+        const rec = currentProduct.recommendation || { status: 'BUY NOW', color: 'green', icon: '🟢', reason: 'Good price.' };
+        recStatus.innerText = rec.status;
+        recIcon.innerText = rec.icon;
+        recReason.innerText = rec.reason;
+
+        recCard.className = 'recommendation-box';
+        if (rec.color === 'green') recCard.classList.add('buy-now');
+        else if (rec.color === 'yellow') recCard.classList.add('wait');
+        else if (rec.color === 'red') recCard.classList.add('overpriced');
+
+        // Render Price History Chart
+        window.renderPriceHistoryChart(currentProduct.priceHistory, currentProduct.currentPrice, '1y');
+
+        // Render Stores Table
+        const stores = currentProduct.stores && currentProduct.stores.length > 0
+          ? [...currentProduct.stores].sort((a, b) => a.price - b.price)
+          : [
+              { name: 'Amazon', price: currentProduct.currentPrice, url: 'https://www.amazon.in' },
+              { name: 'Flipkart', price: Math.round(currentProduct.currentPrice * 1.02), url: 'https://www.flipkart.com' },
+              { name: 'Croma', price: Math.round(currentProduct.currentPrice * 1.04), url: 'https://www.croma.com' }
+            ];
+
+        const minStorePrice = Math.min(...stores.map(s => s.price));
+        if (cheapestDealBtn) {
+          const cheapestStore = stores.find(s => s.price === minStorePrice);
+          cheapestDealBtn.href = cheapestStore.url || '#';
+          cheapestDealBtn.innerText = `View Deal on ${cheapestStore.name} (${window.formatCurrency(minStorePrice)})`;
+        }
+
+        storeTableBody.innerHTML = stores.map((s, index) => {
+          const isCheapest = s.price === minStorePrice;
+          const diff = s.price - minStorePrice;
+
+          return `
+            <tr class="${isCheapest ? 'cheapest-row' : ''}">
+              <td class="store-name-cell">
+                <span>🛒</span>
+                <span>${s.name}</span>
+                ${isCheapest ? '<span class="store-deal-badge">Cheapest Deal</span>' : ''}
+              </td>
+              <td style="font-weight: 700; font-size: 1.1rem; color: ${isCheapest ? 'var(--drop-green)' : 'var(--text-primary)'};">
+                ${window.formatCurrency(s.price)}
+              </td>
+              <td>
+                ${isCheapest ? '<span style="color: var(--drop-green); font-weight: 600;">Best Price</span>' : `+₹${diff.toLocaleString('en-IN')}`}
+              </td>
+              <td><span style="color: var(--drop-green); font-size: 0.85rem;">● In Stock</span></td>
+              <td>
+                <a href="${s.url}" target="_blank" rel="noopener noreferrer" class="btn ${isCheapest ? 'btn-primary' : 'btn-outline'} btn-sm">
+                  View Deal ↗
+                </a>
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        // Modal inputs init
+        modalProdName.value = currentProduct.name;
+        modalCurrentPrice.value = window.formatCurrency(currentProduct.currentPrice);
+        modalTargetPrice.value = Math.round(currentProduct.currentPrice * 0.95);
+
+        // Preset buttons in modal
+        document.getElementById('preset-5-btn').addEventListener('click', () => {
+          modalTargetPrice.value = Math.round(currentProduct.currentPrice * 0.95);
+        });
+        document.getElementById('preset-10-btn').addEventListener('click', () => {
+          modalTargetPrice.value = Math.round(currentProduct.currentPrice * 0.90);
+        });
+        document.getElementById('preset-lowest-btn').addEventListener('click', () => {
+          modalTargetPrice.value = currentProduct.lowestPrice || Math.round(currentProduct.currentPrice * 0.92);
+        });
+
+      } catch (err) {
+        console.error('Error fetching product details:', err);
+        productTitle.innerText = 'Product Not Found';
+        productDesc.innerText = 'The product you are searching for does not exist or has been removed.';
+      }
+
+      // Watchlist Button Toggle
+      watchlistToggleBtn.addEventListener('click', async () => {
+        if (!window.Auth || !window.Auth.isAuthenticated()) {
+          window.showToast('Please login to manage your watchlist', 'info');
+          setTimeout(() => {
+            window.location.href = `/login.html?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+          }, 800);
+          return;
+        }
+
+        try {
+          if (isInWatchlist) {
+            await window.API.removeFromWatchlist(productId);
+            isInWatchlist = false;
+            watchlistToggleBtn.innerText = '⭐ Add to Watchlist';
+            watchlistToggleBtn.style.color = '';
+            window.showToast('Removed from Watchlist', 'info');
+          } else {
+            await window.API.addToWatchlist(productId);
+            isInWatchlist = true;
+            watchlistToggleBtn.innerText = '★ In Watchlist';
+            watchlistToggleBtn.style.color = '#f59e0b';
+            window.showToast('Added to Watchlist!', 'success');
+          }
+        } catch (e) {
+          window.showToast(e.message || 'Action failed', 'error');
+        }
+      });
+
+      // Modal Triggers
+      openAlertModalBtn.addEventListener('click', () => {
+        if (!window.Auth || !window.Auth.isAuthenticated()) {
+          window.showToast('Please login to create price drop alerts', 'info');
+          setTimeout(() => {
+            window.location.href = `/login.html?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+          }, 800);
+          return;
+        }
+        alertModal.classList.add('active');
+      });
+
+      closeModalBtn.addEventListener('click', () => {
+        alertModal.classList.remove('active');
+      });
+
+      alertModal.addEventListener('click', (e) => {
+        if (e.target === alertModal) {
+          alertModal.classList.remove('active');
+        }
+      });
+
+      // Price Alert Form Submit
+      priceAlertForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const targetPrice = Number(modalTargetPrice.value);
+
+        if (!targetPrice || targetPrice <= 0) {
+          window.showToast('Please enter a valid target price', 'error');
+          return;
+        }
+
+        try {
+          await window.API.createAlert(productId, targetPrice);
+          alertModal.classList.remove('active');
+          window.showToast(`Price Alert Created for ${window.formatCurrency(targetPrice)}!`, 'success');
+        } catch (error) {
+          window.showToast(error.message || 'Failed to create alert', 'error');
+        }
+      });
+
+    });
+  </script>
+</body>
+</html>

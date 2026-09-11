@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - ⚡ DropX</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="/index.html" class="brand-logo">
+        <span class="brand-icon">⚡</span>
+        <span class="brand-text">Drop<span>X</span></span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="/index.html" class="nav-link">Home</a></li>
+        <li><a href="/products.html" class="nav-link">Products</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button id="theme-toggle-btn" class="theme-btn" aria-label="Toggle theme">☀️</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Auth Page -->
+  <div class="auth-page-wrap">
+    <div class="auth-card">
+      <div class="auth-header">
+        <span class="brand-icon" style="margin: 0 auto 12px; width: 44px; height: 44px;">⚡</span>
+        <h2>Create Account</h2>
+        <p>Start tracking price drops and saving money today</p>
+      </div>
+
+      <form id="signup-form">
+        <div class="form-group">
+          <label class="form-label" for="signup-name">Full Name</label>
+          <input 
+            type="text" 
+            id="signup-name" 
+            class="form-input" 
+            placeholder="John Doe" 
+            required 
+            autocomplete="name"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="signup-email">Email Address</label>
+          <input 
+            type="email" 
+            id="signup-email" 
+            class="form-input" 
+            placeholder="you@example.com" 
+            required 
+            autocomplete="email"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="signup-password">Password (min 6 characters)</label>
+          <input 
+            type="password" 
+            id="signup-password" 
+            class="form-input" 
+            placeholder="••••••••" 
+            minlength="6" 
+            required 
+            autocomplete="new-password"
+          >
+        </div>
+
+        <button type="submit" id="signup-submit-btn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
+          Create Account
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        Already have an account? <a href="/login.html">Log In</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.Auth && window.Auth.isAuthenticated()) {
+        window.location.href = '/dashboard.html';
+        return;
+      }
+
+      const form = document.getElementById('signup-form');
+      const nameInput = document.getElementById('signup-name');
+      const emailInput = document.getElementById('signup-email');
+      const passInput = document.getElementById('signup-password');
+      const submitBtn = document.getElementById('signup-submit-btn');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = nameInput.value.trim();
+        const email = emailInput.value.trim();
+        const password = passInput.value;
+
+        if (password.length < 6) {
+          window.showToast('Password must be at least 6 characters long', 'error');
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Creating account...';
+
+        try {
+          const res = await window.API.signup(name, email, password);
+          if (res.token && res.user) {
+            window.Auth.setSession(res.token, res.user);
+            window.showToast('Account created successfully!', 'success');
+            setTimeout(() => {
+              window.location.href = '/dashboard.html';
+            }, 600);
+          }
+        } catch (error) {
+          window.showToast(error.message || 'Could not complete registration', 'error');
+          submitBtn.disabled = false;
+          submitBtn.innerText = 'Create Account';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

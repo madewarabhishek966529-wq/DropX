@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚡ DropX - Track Prices. Catch Drops. Save Money.</title>
+  <meta name="description" content="DropX helps you track product prices across Amazon, Flipkart, and Croma, view price history, and know the best time to buy.">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="/index.html" class="brand-logo">
+        <span class="brand-icon">⚡</span>
+        <span class="brand-text">Drop<span>X</span></span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="/index.html" class="nav-link active">Home</a></li>
+        <li><a href="/products.html" class="nav-link">Products</a></li>
+        <li><a href="/products.html?dropsOnly=true" class="nav-link">Price Drops</a></li>
+        <li><a href="#categories" class="nav-link">Categories</a></li>
+        <li><a href="/dashboard.html" class="nav-link">Watchlist</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button id="theme-toggle-btn" class="theme-btn" aria-label="Toggle theme">☀️</button>
+        <div id="nav-auth-slot">
+          <!-- Populated dynamically by auth.js -->
+          <a href="/login.html" class="btn btn-outline btn-sm">Login</a>
+        </div>
+        <button class="mobile-toggle" aria-label="Open mobile menu">☰</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <span>⚡</span> Live Price Tracking & Deal Intelligence
+      </div>
+      
+      <h1 class="hero-title">
+        Stop Guessing. <br>
+        <span class="gradient-text">Know the Best Time to Buy.</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Track product prices, compare stores, and get notified when prices drop.
+      </p>
+
+      <!-- Large Search Bar -->
+      <div class="search-wrapper">
+        <form class="search-box search-form">
+          <input 
+            type="text" 
+            placeholder="Search iPhone, Laptop, GPU, Samsung..." 
+            aria-label="Search products"
+            required
+          >
+          <button type="submit" class="btn btn-primary">
+            Track Price
+          </button>
+        </form>
+
+        <div class="quick-tags">
+          <span>Popular:</span>
+          <a href="/products.html?search=iPhone" class="tag-pill">iPhone 17 Pro</a>
+          <a href="/products.html?search=RTX" class="tag-pill">RTX 5070</a>
+          <a href="/products.html?search=Galaxy" class="tag-pill">Samsung S25</a>
+          <a href="/products.html?search=MacBook" class="tag-pill">MacBook M4</a>
+          <a href="/products.html?search=Sony" class="tag-pill">Sony XM5</a>
+        </div>
+      </div>
+
+      <!-- Trust Stats Banner -->
+      <div class="stats-banner">
+        <div class="stat-item">
+          <div class="stat-number">10,000+</div>
+          <div class="stat-label">Products Tracked</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">₹1.5 Cr+</div>
+          <div class="stat-label">User Savings</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">3+ Major</div>
+          <div class="stat-label">Stores Compared</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">99.8%</div>
+          <div class="stat-label">Price Accuracy</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Trending Products Section -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">🔥 Trending Products</h2>
+          <p class="section-subtitle">The most tracked gadgets and tech essentials right now</p>
+        </div>
+        <a href="/products.html" class="view-all-link">View All Products →</a>
+      </div>
+
+      <div id="trending-grid" class="product-grid">
+        <!-- Rendered via JavaScript -->
+        <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
+          <p style="color: var(--text-muted);">Loading trending items...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Biggest Price Drops Section -->
+  <section class="section" style="background: var(--bg-secondary); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">📉 Biggest Price Drops</h2>
+          <p class="section-subtitle">Massive discounts detected across Amazon, Flipkart, and Croma</p>
+        </div>
+        <a href="/products.html?dropsOnly=true&sort=drops" class="view-all-link">All Price Drops →</a>
+      </div>
+
+      <div id="drops-grid" class="product-grid">
+        <!-- Rendered via JavaScript -->
+        <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
+          <p style="color: var(--text-muted);">Loading biggest drops...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section class="section" id="categories">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">📁 Browse by Category</h2>
+          <p class="section-subtitle">Explore historical trends across your favorite categories</p>
+        </div>
+      </div>
+
+      <div class="category-grid">
+        <a href="/products.html?category=Smartphones" class="category-card">
+          <div class="category-icon">📱</div>
+          <div class="category-name">Smartphones</div>
+          <div class="category-count">Apple, Samsung, OnePlus</div>
+        </a>
+
+        <a href="/products.html?category=Laptops" class="category-card">
+          <div class="category-icon">💻</div>
+          <div class="category-name">Laptops</div>
+          <div class="category-count">MacBook, Gaming, Ultrabooks</div>
+        </a>
+
+        <a href="/products.html?category=PC %26 GPUs" class="category-card">
+          <div class="category-icon">🎮</div>
+          <div class="category-name">PC & GPUs</div>
+          <div class="category-count">NVIDIA RTX 5000, Components</div>
+        </a>
+
+        <a href="/products.html?category=Audio" class="category-card">
+          <div class="category-icon">🎧</div>
+          <div class="category-name">Audio & Sound</div>
+          <div class="category-count">Noise-Cancelling, Earbuds</div>
+        </a>
+
+        <a href="/products.html?category=Smartwatches" class="category-card">
+          <div class="category-icon">⌚</div>
+          <div class="category-name">Smartwatches</div>
+          <div class="category-count">Apple Watch, Wearables</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- How DropX Works / Features Section -->
+  <section class="features-section">
+    <div class="container">
+      <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+        <h2 class="section-title" style="justify-content: center;">Why Smart Shoppers Use DropX</h2>
+        <p class="section-subtitle">We give you the unfair advantage when shopping online.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon-wrap">📊</div>
+          <h3>1-Year Price History</h3>
+          <p>Never fall for fake discounts again. Inspect actual historical prices with interactive charts.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-wrap">🏪</div>
+          <h3>Multi-Store Comparison</h3>
+          <p>Compare real-time prices across Amazon, Flipkart, and Croma all in one place with a single click.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-wrap">🤖</div>
+          <h3>Buy or Wait Advisor</h3>
+          <p>Our intelligent algorithm analyzes historical lows and averages to tell you if it's the right time to buy.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-wrap">🔔</div>
+          <h3>Instant Drop Alerts</h3>
+          <p>Set your target price and receive instant notifications the moment a retailer matches your goal.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-about">
+          <div class="brand-logo">
+            <span class="brand-icon">⚡</span>
+            <span class="brand-text">Drop<span>X</span></span>
+          </div>
+          <p>Track Prices. Catch Drops. Save Money.<br>Empowering buyers with algorithmic price transparency.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="/products.html">All Products</a></li>
+            <li><a href="/products.html?dropsOnly=true">Price Drops</a></li>
+            <li><a href="/products.html?category=Smartphones">Smartphones</a></li>
+            <li><a href="/products.html?category=Laptops">Laptops</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Features</h4>
+          <ul>
+            <li><a href="/dashboard.html">Watchlist</a></li>
+            <li><a href="/dashboard.html">Price Alerts</a></li>
+            <li><a href="/products.html">Store Comparison</a></li>
+            <li><a href="/products.html">Buy/Wait Guide</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Account</h4>
+          <ul>
+            <li><a href="/login.html">Sign In</a></li>
+            <li><a href="/signup.html">Create Account</a></li>
+            <li><a href="/dashboard.html">My Dashboard</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© 2026 ⚡ DropX Technologies Inc. All rights reserved.</div>
+        <div>Built for smart consumers worldwide.</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    // Home Page Specific Loader
+    document.addEventListener('DOMContentLoaded', async () => {
+      const trendingGrid = document.getElementById('trending-grid');
+      const dropsGrid = document.getElementById('drops-grid');
+
+      // Preload user watchlist
+      let userWatchlistIds = new Set();
+      if (window.Auth && window.Auth.isAuthenticated()) {
+        try {
+          const res = await window.API.getWatchlist();
+          if (res && res.data) {
+            userWatchlistIds = new Set(res.data.map(p => p._id));
+          }
+        } catch (e) {}
+      }
+
+      try {
+        // Load Trending Products (first 4)
+        const trendingRes = await window.API.getProducts({ limit: 4 });
+        if (trendingGrid && trendingRes.data) {
+          trendingGrid.innerHTML = trendingRes.data.map(product => {
+            return window.createProductCardHTML(product, userWatchlistIds.has(product._id));
+          }).join('');
+        }
+
+        // Load Biggest Price Drops
+        const dropsRes = await window.API.getProducts({ dropsOnly: true, sort: 'drops', limit: 4 });
+        if (dropsGrid && dropsRes.data) {
+          dropsGrid.innerHTML = dropsRes.data.map(product => {
+            return window.createProductCardHTML(product, userWatchlistIds.has(product._id));
+          }).join('');
+        }
+      } catch (err) {
+        console.error('Error loading homepage feeds:', err);
+      }
+    });
+  </script>
+</body>
+</html>
